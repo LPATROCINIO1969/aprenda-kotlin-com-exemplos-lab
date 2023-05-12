@@ -37,9 +37,19 @@ open class Conteudo(val nome:String){
          var totalMinutos = listaConteudos.sumOf { it.duracaoMinutos }
          var totalSegundos = listaConteudos.sumOf { it.duracaoSegundos }
 
-         if (totalSegundos > 60) totalMinutos += totalSegundos / 60
-         if (totalMinutos > 60) totalHoras += totalMinutos / 60
+         if (totalSegundos >= 60) {
+             totalMinutos += totalSegundos / 60
+             totalSegundos %= 60
+         }
+         if (totalMinutos >= 60) {
+             totalHoras += totalMinutos / 60
+             totalMinutos %= 60
+         }
+
+         if(totalMinutos>30) totalHoras += 1
+
          if (totalHoras < 1) totalHoras = 1
+
          this.duracaoHoras = totalHoras
 
      }
@@ -69,21 +79,21 @@ class Formacao(nome: String):ConteudoEducacional(nome=nome) {
     }
 
     override fun toString(): String {
-        var texto:String= "=====================================================================\n"
+        var texto:String= "===============================================================================\n"
         texto += "Formacao: ${nome}\nCH: ${duracaoHoras} hora(s) - Nivel: ${nivel}\n"
-//        texto +="=====================================================================\n"
+
         for (atividade in listaConteudos){
             texto+=atividade.toString() + "\n"
         }
         texto+=listarUsuario()
-        texto +="=====================================================================\n"
+        texto +="===============================================================================\n"
         return texto
     }
 
     fun listarUsuario():String{
         var texto:String = "Lista de Estudantes Inscritos\n"
 
-        texto+="--------------------------------------------------------------------\n"
+        texto+="------------------------------------------------------------------------------\n"
         var contador:Int=1
         for(aluno in inscritos.sortedBy { it.nome }){
             texto+= "${contador} - \t${aluno.nome}\n"
@@ -100,11 +110,11 @@ class Atividade(nome: String):ConteudoEducacional(nome=nome){
     override var nivel = super.nivel
 
     override fun toString():String{
-        var texto:String= "--------------------------------------------------------------------\n"
+        var texto:String= "------------------------------------------------------------------------------\n"
         texto += "Atividade: ${this.nome}\n"
         texto += "Duracao: ${this.duracaoHoras} hora(s)\n"
         texto += "Nivel: ${this.nivel}\n"
-        texto += "--------------------------------------------------------------------\n"
+        texto += "------------------------------------------------------------------------------\n"
         for(curso in listaConteudos){
             texto+= curso.toString() + "\n"
         }
@@ -119,12 +129,12 @@ class Curso( nome:String):ConteudoEducacional(nome = nome){
         texto = "\tCurso: ${nome} \n"
         texto += "\tDuracao: ${duracaoHoras} hora(s)\n"
         texto += "\tNivel: ${nivel}\n"
-        texto += "--------------------------------------------------------------------\n"
+        texto += "------------------------------------------------------------------------------\n"
         for(aula in listaConteudos){
             texto+= "\t\tAula ${contador}: " + aula.toString() + "\n"
             contador++
         }
-        texto += "--------------------------------------------------------------------\n"
+        texto += "------------------------------------------------------------------------------"
         return texto
     }
 }
@@ -137,15 +147,12 @@ class Curso( nome:String):ConteudoEducacional(nome = nome){
 
 
 fun main() {
-    val linhaSeparacao = "--------------------------------------------------------------------"
-    // Criando novos conteudos educacionais
-    //conteudo1 = ConteudoEducacional(,,)
 
     // Criando nova formacao
     val formacao:Formacao = Formacao("Formacao Python Developer")
     val curso:ConteudoEducacional = Curso("Ambiente de Desenvolvimento e Primeiros Passos com Python")
     val atividade:ConteudoEducacional = Atividade("Fundamentos de Python")
-
+    val curso2:ConteudoEducacional = Curso("Conhecendo a Linguagem Python")
 
     // Associando aulas a cursos
     curso.addConteudo(Aula("Boas Vindas",0,1,30,Nivel.BASICO))
@@ -154,8 +161,14 @@ fun main() {
     curso.addConteudo(Aula("Funcoes", 0,9,10,Nivel.INTERMEDIARIO))
     curso.addConteudo(Aula("Colecoes", 1,0,0,Nivel.DIFICIL ))
 
+    curso2.addConteudo(Aula("Nocoes iniciais",0,25,30,Nivel.BASICO))
+    curso2.addConteudo(Aula("Criando uma pilha", 0, 50,15,Nivel.INTERMEDIARIO))
+    curso2.addConteudo(Aula("Lista Encadeada",0,40,50,Nivel.DIFICIL))
+
+
     // Associando cursos a atividades
     atividade.addConteudo(curso)
+    atividade.addConteudo(curso2)
 
     // Associando atividades a Formacao
     formacao.addConteudo(atividade)
