@@ -20,6 +20,10 @@ open class Conteudo(val nome:String){
     open var duracaoMinutos:Int = 0
     open var duracaoSegundos:Int = 0
     open var nivel:Nivel = Nivel.BASICO
+
+    open fun determinarDuracao(){}
+    open fun determinarNivel(){}
+
 }
 
 
@@ -28,11 +32,14 @@ open class Conteudo(val nome:String){
 
      open fun addConteudo(conteudo: Conteudo) {
          listaConteudos.add(conteudo)
-         determinarDuracao()
-         determinarNivel()
+//         determinarDuracao()
+//         determinarNivel()
      }
 
-     open fun determinarDuracao() {
+     override fun determinarDuracao() {
+         listaConteudos.forEach {
+             conteudo -> conteudo.determinarDuracao()
+         }
          var totalHoras = listaConteudos.sumOf { it.duracaoHoras }
          var totalMinutos = listaConteudos.sumOf { it.duracaoMinutos }
          var totalSegundos = listaConteudos.sumOf { it.duracaoSegundos }
@@ -54,7 +61,8 @@ open class Conteudo(val nome:String){
 
      }
 
-     open fun determinarNivel() {
+     override fun determinarNivel() {
+         listaConteudos.forEach { conteudo->conteudo.determinarNivel() }
          val duracaoTotal = listaConteudos.sumOf { it.duracaoHoras*3600+it.duracaoMinutos*60+it.duracaoSegundos }
          val valorNivel: Int = listaConteudos.sumOf { it.nivel.valor * (it.duracaoHoras * 3600 + it.duracaoMinutos * 60 + it.duracaoSegundos) } / duracaoTotal
 
@@ -67,6 +75,8 @@ open class Conteudo(val nome:String){
 
      }
  }
+
+
 
 class Formacao(nome: String):ConteudoEducacional(nome=nome) {
     private val inscritos = mutableListOf<Usuario>()
@@ -140,7 +150,8 @@ class Curso( nome:String):ConteudoEducacional(nome = nome){
 }
 
  class Aula(nome:String, override var duracaoHoras:Int=0, override var duracaoMinutos:Int, override var duracaoSegundos:Int, override var nivel:Nivel):Conteudo(nome=nome){
-    override fun toString():String {
+
+     override fun toString():String {
         return "${nome.padEnd(20)} - Duracao: ${duracaoHoras.toString().padStart(2,'0')}:${duracaoMinutos.toString().padStart(2,'0')}:${duracaoSegundos.toString().padStart(2,'0')} - Nivel: $nivel"
     }
 }
@@ -153,6 +164,9 @@ fun main() {
     val curso:ConteudoEducacional = Curso("Ambiente de Desenvolvimento e Primeiros Passos com Python")
     val atividade:ConteudoEducacional = Atividade("Fundamentos de Python")
     val curso2:ConteudoEducacional = Curso("Conhecendo a Linguagem Python")
+
+    // Associando atividades a Formacao
+    formacao.addConteudo(atividade)
 
     // Associando aulas a cursos
     curso.addConteudo(Aula("Boas Vindas",0,1,30,Nivel.BASICO))
@@ -170,8 +184,9 @@ fun main() {
     atividade.addConteudo(curso)
     atividade.addConteudo(curso2)
 
-    // Associando atividades a Formacao
-    formacao.addConteudo(atividade)
+    // Determina a duração e o nível da formação
+    formacao.determinarDuracao()
+    formacao.determinarNivel()
 
     // alunos inscritos
     formacao.matricular(Usuario("Joao Santana"))
