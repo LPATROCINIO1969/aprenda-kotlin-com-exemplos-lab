@@ -141,7 +141,7 @@ class Curso( nome:String):ConteudoEducacional(nome = nome){
 
  class Aula(nome:String, override var duracaoHoras:Int=0, override var duracaoMinutos:Int, override var duracaoSegundos:Int, override var nivel:Nivel):Conteudo(nome=nome){
     override fun toString():String {
-        return "${nome.padEnd(20)} - Duracao: ${duracaoHoras.toString().padStart(2)}:${duracaoMinutos.toString().padStart(2)}:${duracaoSegundos.toString().padStart(2)} - Nivel: $nivel"
+        return "${nome.padEnd(20)} - Duracao: ${duracaoHoras.toString().padStart(2,'0')}:${duracaoMinutos.toString().padStart(2,'0')}:${duracaoSegundos.toString().padStart(2,'0')} - Nivel: $nivel"
     }
 }
 
