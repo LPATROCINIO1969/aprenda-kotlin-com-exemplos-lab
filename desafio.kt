@@ -2,7 +2,7 @@
 // Projeto Desafio Kotlin
 // Autor: Lucio P. Patrocínio
 // Data Criacao: 09/05/2023
-// Data Ultima alteracao: 10/05/2023
+// Data Ultima alteracao: 13/05/2023
 // *************************************************************************************
 // Descrição: Alteração do template disponibilizado para o projeto Kotlin.
 // Este projeto procura abstrair as FORMACOES da DIO e outras entidades associadas na
@@ -201,7 +201,6 @@ fun main() {
 
 
 
-//    TODO("Analise as classes modeladas para este domínio de aplicação e pense em formas de evoluí-las.")
-//   TODO("Simule alguns cenários de teste. Para isso, crie alguns objetos usando as classes em questão.")
+
 }
 
